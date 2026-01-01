@@ -186,3 +186,230 @@ function getTodayContent() {
                     <label>
                         <input type="checkbox" ${appState.habits.exercise ? 'checked' : ''} onchange="toggleHabit('exercise')">
                         💪 Exercice
+                    </label>
+                </div>
+                <div class="habit-item">
+                    <label>
+                        <input type="checkbox" ${appState.habits.meditation ? 'checked' : ''} onchange="toggleHabit('meditation')">
+                        🧘 Méditation
+                    </label>
+                </div>
+            </div>
+            
+            <!-- OBJECTIFS DU JOUR -->
+            <div class="daily-goals card">
+                <h3>🎯 Objectif principal</h3>
+                <input type="text" id="mainGoal" placeholder="Quel est votre objectif principal aujourd'hui ?" class="goal-input">
+                <button class="btn-secondary" onclick="saveGoal()">Définir l'objectif</button>
+            </div>
+            
+            <!-- CITATION INSPIRANTE -->
+            <div class="quote-card card">
+                <h3>💫 Citation du jour</h3>
+                <blockquote id="dailyQuote">
+                    "La vie est faite de petits bonheurs."
+                </blockquote>
+                <button class="btn-secondary" onclick="getNewQuote()">🔄 Nouvelle citation</button>
+            </div>
+        </div>
+    `;
+}
+
+// === INTERACTIONS PAGE AUJOURD'HUI ===
+function initTodayInteractions() {
+    // Word counter pour journal rapide
+    const journalTextarea = document.getElementById('quickJournal');
+    if (journalTextarea) {
+        journalTextarea.addEventListener('input', updateWordCount);
+    }
+}
+
+function updateWordCount() {
+    const text = document.getElementById('quickJournal').value;
+    const wordCount = text.trim() ? text.trim().split(/\s+/).length : 0;
+    document.querySelector('.word-count').textContent = `${wordCount} mot${wordCount > 1 ? 's' : ''}`;
+}
+
+function saveQuickJournal() {
+    const text = document.getElementById('quickJournal').value;
+    if (text.trim()) {
+        localStorage.setItem(`ethera-journal-${new Date().toDateString()}`, text);
+        alert('✅ Journal sauvegardé !');
+    }
+}
+
+// === GESTION DES TÂCHES ===
+function addTask() {
+    const input = document.getElementById('newTask');
+    const taskText = input.value.trim();
+    
+    if (taskText) {
+        appState.tasks.push({ text: taskText, completed: false });
+        saveTasks();
+        loadPage('today');
+    }
+}
+
+function handleTaskEnter(event) {
+    if (event.key === 'Enter') {
+        addTask();
+    }
+}
+
+function toggleTask(index) {
+    appState.tasks[index].completed = !appState.tasks[index].completed;
+    saveTasks();
+    loadPage('today');
+}
+
+function deleteTask(index) {
+    appState.tasks.splice(index, 1);
+    saveTasks();
+    loadPage('today');
+}
+
+function saveTasks() {
+    localStorage.setItem('ethera-tasks', JSON.stringify(appState.tasks));
+}
+
+// === GESTION HUMEUR ===
+function selectMood(mood) {
+    appState.mood = mood;
+    localStorage.setItem('ethera-mood-today', mood);
+    loadPage('today');
+}
+
+// === GESTION HABITUDES ===
+function incrementWater() {
+    if (appState.habits.water < 8) {
+        appState.habits.water++;
+        document.getElementById('waterCount').textContent = appState.habits.water;
+        saveHabits();
+    }
+}
+
+function decrementWater() {
+    if (appState.habits.water > 0) {
+        appState.habits.water--;
+        document.getElementById('waterCount').textContent = appState.habits.water;
+        saveHabits();
+    }
+}
+
+function toggleHabit(habit) {
+    appState.habits[habit] = !appState.habits[habit];
+    saveHabits();
+}
+
+function saveHabits() {
+    localStorage.setItem('ethera-habits', JSON.stringify(appState.habits));
+}
+
+// === OBJECTIFS ===
+function saveGoal() {
+    const goal = document.getElementById('mainGoal').value;
+    if (goal.trim()) {
+        localStorage.setItem('ethera-goal-today', goal);
+        alert('🎯 Objectif défini !');
+    }
+}
+
+// === CITATIONS ===
+const quotes = [
+    "La vie est faite de petits bonheurs.",
+    "Chaque jour est une nouvelle chance.",
+    "Crois en toi et tout devient possible.",
+    "Le bonheur est un voyage, pas une destination.",
+    "Fais de ta vie un rêve, et d'un rêve, une réalité.",
+    "La seule limite est celle que tu te fixes."
+];
+
+function getNewQuote() {
+    const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+    document.getElementById('dailyQuote').textContent = `"${randomQuote}"`;
+}
+
+// === AUTRES PAGES (simplifié pour l'instant) ===
+function getCalendarContent() {
+    return `
+        <div class="page-header fade-in">
+            <h1>Calendrier</h1>
+        </div>
+        <div class="calendar-view scale-in">
+            <p>📆 Vue calendrier à venir...</p>
+        </div>
+    `;
+}
+
+function getJournalContent() {
+    return `
+        <div class="page-header fade-in">
+            <h1>Journal</h1>
+        </div>
+        <div class="journal-view scale-in">
+            <div class="journal-editor card">
+                <h3>Nouvelle entrée</h3>
+                <input type="text" id="journalTitle" placeholder="Titre..." class="journal-title">
+                <textarea id="journalContent" placeholder="Écrivez vos pensées..." class="journal-content"></textarea>
+                <button class="btn-primary" onclick="saveJournalEntry()">Sauvegarder l'entrée</button>
+            </div>
+        </div>
+    `;
+}
+
+function initJournalInteractions() {
+    // À implémenter
+}
+
+function saveJournalEntry() {
+    const title = document.getElementById('journalTitle').value;
+    const content = document.getElementById('journalContent').value;
+    
+    if (content.trim()) {
+        const entry = {
+            title: title || 'Sans titre',
+            content: content,
+            date: new Date().toISOString()
+        };
+        
+        // Sauvegarder l'entrée
+        let entries = JSON.parse(localStorage.getItem('ethera-journal-entries') || '[]');
+        entries.push(entry);
+        localStorage.setItem('ethera-journal-entries', JSON.stringify(entries));
+        
+        alert('✅ Entrée de journal sauvegardée !');
+        document.getElementById('journalTitle').value = '';
+        document.getElementById('journalContent').value = '';
+    }
+}
+
+function getProjectsContent() {
+    return `
+        <div class="page-header fade-in">
+            <h1>Projets</h1>
+        </div>
+        <div class="projects-view scale-in">
+            <p>📊 Gestion de projets à venir...</p>
+        </div>
+    `;
+}
+
+function getInsightsContent() {
+    return `
+        <div class="page-header fade-in">
+            <h1>Insights</h1>
+        </div>
+        <div class="insights-view scale-in">
+            <p>📈 Statistiques et insights à venir...</p>
+        </div>
+    `;
+}
+
+// === UTILITAIRES ===
+function loadTheme() {
+    const savedTheme = localStorage.getItem('ethera-theme') || 'dark';
+    document.body.className = `theme-${savedTheme}`;
+    appState.currentTheme = savedTheme;
+}
+
+console.log('✨ Ethera App chargée avec succès');
