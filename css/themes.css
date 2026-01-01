@@ -1,0 +1,64 @@
+/* === THEME DARK (Ethera Dark - Ton ADN gothique) === */
+.theme-dark {
+    --bg-primary: #0a0a0f;
+    --bg-secondary: #13131a;
+    --text-primary: #e8e8f0;
+    --text-secondary: #a8a8b8;
+    --border-color: #2a2a35;
+    --accent-primary: #c792ea;
+    --accent-secondary: #82aaff;
+    --hover-bg: rgba(199, 146, 234, 0.1);
+    --active-bg: rgba(199, 146, 234, 0.15);
+    --shadow-color: rgba(199, 146, 234, 0.2);
+    --button-bg: #1e1e28;
+}
+
+/* === THEME LIGHT (Ethera Light - Accessible & Aérien) === */
+.theme-light {
+    --bg-primary: #fafafa;
+    --bg-secondary: #ffffff;
+    --text-primary: #1a1a1a;
+    --text-secondary: #6b6b6b;
+    --border-color: #e0e0e0;
+    --accent-primary: #7c3aed;
+    --accent-secondary: #3b82f6;
+    --hover-bg: rgba(124, 58, 237, 0.08);
+    --active-bg: rgba(124, 58, 237, 0.12);
+    --shadow-color: rgba(124, 58, 237, 0.15);
+    --button-bg: #f5f3ff;
+}
+
+/* === TRANSITION DOUCE ENTRE THEMES === */
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+.main-content {
+    background: var(--bg-secondary);
+}
+
+/* === VARIABLES GLOBALES === */
+:root {
+    --transition-speed: 0.3s;
+    --border-radius: 12px;
+    --spacing-unit: 1rem;
+}
+
+/* === SCROLLBAR CUSTOM === */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--accent-primary);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-secondary);
+}
