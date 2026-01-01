@@ -18,6 +18,9 @@
             --active-bg: rgba(199, 146, 234, 0.15);
             --shadow-color: rgba(199, 146, 234, 0.2);
             --button-bg: #1e1e28;
+            --success: #4ade80;
+            --warning: #fbbf24;
+            --danger: #f87171;
         }
 
         .theme-light {
@@ -32,6 +35,9 @@
             --active-bg: rgba(124, 58, 237, 0.12);
             --shadow-color: rgba(124, 58, 237, 0.15);
             --button-bg: #f5f3ff;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
         }
 
         /* === BASE === */
@@ -134,7 +140,7 @@
         }
 
         #content-container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             transition: opacity 0.3s ease;
         }
@@ -242,22 +248,28 @@
             cursor: pointer;
             opacity: 0.4;
             transition: all 0.3s ease;
+            filter: grayscale(100%);
         }
 
         .mood-icon:hover {
             transform: scale(1.3);
             opacity: 0.8;
+            filter: grayscale(0%);
         }
 
         .mood-icon.selected {
             opacity: 1;
             transform: scale(1.4);
+            filter: grayscale(0%);
+            animation: pulse 2s ease-in-out infinite;
         }
 
         /* === TASKS === */
         .task-list {
             list-style: none;
             margin-bottom: 1rem;
+            max-height: 200px;
+            overflow-y: auto;
         }
 
         .task-item {
@@ -270,13 +282,46 @@
             align-items: center;
         }
 
+        .task-item.completed {
+            opacity: 0.5;
+        }
+
+        .task-item.completed .task-text {
+            text-decoration: line-through;
+        }
+
+        .task-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: var(--accent-primary);
+        }
+
         .task-text {
             flex: 1;
+        }
+
+        .delete-task {
+            background: none;
+            border: none;
+            cursor: pointer;
+            opacity: 0.5;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .delete-task:hover {
+            opacity: 1;
+            transform: scale(1.2);
         }
 
         .add-task-container {
             display: flex;
             gap: 0.75rem;
+        }
+
+        .add-task-container input {
+            flex: 1;
         }
 
         .add-task-container button {
@@ -300,6 +345,185 @@
             font-size: 0.85rem;
             color: var(--text-secondary);
             margin-bottom: 0.5rem;
+        }
+
+        /* === HABITS === */
+        .habit-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+        }
+
+        .habit-item label {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+        }
+
+        .habit-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: var(--accent-primary);
+        }
+
+        /* === WATER TRACKER === */
+        .water-tracker {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .water-tracker button {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            background: var(--accent-primary);
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+
+        .water-tracker button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px var(--shadow-color);
+        }
+
+        .water-count {
+            font-size: 1.5rem;
+            font-weight: 700;
+            min-width: 40px;
+            text-align: center;
+            color: var(--accent-primary);
+        }
+
+        .water-glasses {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .water-glass {
+            width: 30px;
+            height: 40px;
+            border: 2px solid var(--border-color);
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .water-glass.filled::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            animation: fillWater 0.5s ease;
+        }
+
+        /* === QUOTE CARD === */
+        .quote-text {
+            font-size: 1.1rem;
+            font-style: italic;
+            line-height: 1.6;
+            padding: 1.5rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-primary);
+            margin-bottom: 1rem;
+        }
+
+        .quote-refresh {
+            padding: 0.75rem 1.5rem;
+            background: var(--button-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .quote-refresh:hover {
+            background: var(--hover-bg);
+        }
+
+        /* === STATS === */
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        /* === PROGRESS BAR === */
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--bg-secondary);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            transition: width 0.5s ease;
+        }
+
+        /* === ANIMATIONS === */
+        @keyframes pulse {
+            0%, 100% { transform: scale(1.4); }
+            50% { transform: scale(1.5); }
+        }
+
+        @keyframes fillWater {
+            from { height: 0; }
+            to { height: 100%; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease;
         }
 
         /* === CALENDAR === */
@@ -426,12 +650,68 @@
     </main>
 
     <script>
-        // App state
-        let currentMood = null;
-        let currentYear = new Date().getFullYear();
-        let currentMonth = new Date().getMonth();
+        // === APP STATE ===
+        let appState = {
+            mood: null,
+            waterCount: 0,
+            habits: {
+                exercise: false,
+                meditation: false,
+                reading: false
+            },
+            tasks: [],
+            journalStreak: 0,
+            currentYear: new Date().getFullYear(),
+            currentMonth: new Date().getMonth()
+        };
 
-        // Load page
+        // Load saved data
+        function loadSavedData() {
+            const saved = localStorage.getItem('ethera-data');
+            if (saved) {
+                appState = {...appState, ...JSON.parse(saved)};
+            }
+        }
+
+        // Save data
+        function saveData() {
+            localStorage.setItem('ethera-data', JSON.stringify(appState));
+        }
+
+        // === QUOTES ===
+        const quotes = [
+            "La vie est faite de petits bonheurs.",
+            "Chaque jour est une nouvelle chance.",
+            "Crois en toi et tout devient possible.",
+            "Le bonheur est un voyage, pas une destination.",
+            "Fais de ta vie un rêve, et d'un rêve, une réalité.",
+            "La seule limite est celle que tu te fixes.",
+            "Commence là où tu es, utilise ce que tu as, fais ce que tu peux.",
+            "Le succès, c'est tomber sept fois, se relever huit.",
+            "Sois le changement que tu veux voir dans le monde.",
+            "Les rêves ne se réalisent pas par magie, il faut de la sueur, de la détermination et du travail."
+        ];
+
+        let currentQuote = quotes[0];
+
+        function getNewQuote() {
+            currentQuote = quotes[Math.floor(Math.random() * quotes.length)];
+            document.querySelector('.quote-text').textContent = `"${currentQuote}"`;
+        }
+
+        // === PROMPTS ===
+        const journalPrompts = [
+            "Comment vous sentez-vous aujourd'hui ?",
+            "Qu'est-ce qui vous rend reconnaissant(e) aujourd'hui ?",
+            "Quel est votre objectif principal pour aujourd'hui ?",
+            "Quelle est la meilleure chose qui vous est arrivée récemment ?",
+            "Qu'avez-vous appris aujourd'hui ?",
+            "Qu'est-ce qui vous inspire en ce moment ?",
+            "Quel petit plaisir vous êtes-vous accordé aujourd'hui ?",
+            "Qu'aimeriez-vous accomplir cette semaine ?"
+        ];
+
+        // === LOAD PAGE ===
         function loadPage(page) {
             const container = document.getElementById('content-container');
             const navItems = document.querySelectorAll('.nav-item');
@@ -440,121 +720,246 @@
             event.target.closest('.nav-item').classList.add('active');
             
             if (page === 'today') {
-                container.innerHTML = `
-                    <div class="page-header">
-                        <h1>Aujourd'hui</h1>
-                        <p class="date">${new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</p>
-                    </div>
-                    
-                    <div class="today-grid">
-                        <div class="card">
-                            <h3>✍️ Journal rapide</h3>
-                            <p class="journal-prompt">Comment vous sentez-vous aujourd'hui ?</p>
-                            <textarea id="quickJournal" placeholder="Écrivez vos pensées..."></textarea>
-                            <div class="word-count">0 mots</div>
-                            <button class="btn-primary">Sauvegarder</button>
-                        </div>
-                        
-                        <div class="card">
-                            <h3>📋 Tâches du jour</h3>
-                            <ul class="task-list">
-                                <li style="text-align: center; color: var(--text-secondary); padding: 1rem;">Aucune tâche</li>
-                            </ul>
-                            <div class="add-task-container">
-                                <input type="text" placeholder="Nouvelle tâche...">
-                                <button class="btn-secondary">+ Ajouter</button>
-                            </div>
-                        </div>
-                        
-                        <div class="card">
-                            <h3>😊 Comment vous sentez-vous ?</h3>
-                            <div class="mood-selector">
-                                <span class="mood-icon" onclick="selectMood(this, 'happy')">🤩</span>
-                                <span class="mood-icon" onclick="selectMood(this, 'good')">😊</span>
-                                <span class="mood-icon" onclick="selectMood(this, 'neutral')">😐</span>
-                                <span class="mood-icon" onclick="selectMood(this, 'sad')">😔</span>
-                                <span class="mood-icon" onclick="selectMood(this, 'angry')">😡</span>
-                                <span class="mood-icon" onclick="selectMood(this, 'tired')">😴</span>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                
-                // Word counter
-                const journal = document.getElementById('quickJournal');
-                if (journal) {
-                    journal.addEventListener('input', () => {
-                        const words = journal.value.trim() ? journal.value.trim().split(/\s+/).length : 0;
-                        document.querySelector('.word-count').textContent = words + ' mot' + (words > 1 ? 's' : '');
-                    });
-                }
-                
+                loadTodayPage(container);
             } else if (page === 'calendar') {
-                const today = new Date();
-                const month = today.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
-                
-                container.innerHTML = `
-                    <div class="page-header">
-                        <h1>Calendrier</h1>
-                        <p class="date">${month}</p>
-                    </div>
-                    
-                    <div class="calendar-container">
-                        <div class="calendar-header">
-                            <button class="calendar-nav" onclick="previousMonth()">‹</button>
-                            <h2 id="currentMonth">${month}</h2>
-                            <button class="calendar-nav" onclick="nextMonth()">›</button>
-                        </div>
-                        
-                        <div class="calendar-grid">
-                            <div class="calendar-day-name">Lun</div>
-                            <div class="calendar-day-name">Mar</div>
-                            <div class="calendar-day-name">Mer</div>
-                            <div class="calendar-day-name">Jeu</div>
-                            <div class="calendar-day-name">Ven</div>
-                            <div class="calendar-day-name">Sam</div>
-                            <div class="calendar-day-name">Dim</div>
-                            
-                            <div id="calendarDays" style="grid-column: 1 / -1; display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.5rem;"></div>
-                        </div>
-                    </div>
-                `;
-                
-                renderCalendar(today.getFullYear(), today.getMonth());
-                
+                loadCalendarPage(container);
             } else if (page === 'journal') {
-                container.innerHTML = `
-                    <div class="page-header">
-                        <h1>Journal</h1>
-                    </div>
-                    <div class="card" style="max-width: 800px; margin: 0 auto;">
-                        <h3>Nouvelle entrée</h3>
-                        <input type="text" placeholder="Titre...">
-                        <textarea style="min-height: 300px;" placeholder="Écrivez vos pensées..."></textarea>
-                        <button class="btn-primary">Sauvegarder</button>
-                    </div>
-                `;
+                loadJournalPage(container);
             } else if (page === 'projects') {
-                container.innerHTML = `
-                    <div class="page-header">
-                        <h1>Projets</h1>
-                    </div>
-                    <p>À venir...</p>
-                `;
+                container.innerHTML = '<div class="page-header"><h1>Projets</h1></div><p>À venir...</p>';
             } else if (page === 'insights') {
-                container.innerHTML = `
-                    <div class="page-header">
-                        <h1>Insights</h1>
-                    </div>
-                    <p>À venir...</p>
-                `;
+                container.innerHTML = '<div class="page-header"><h1>Insights</h1></div><p>À venir...</p>';
             }
         }
 
-        // Calendar functions
-        function renderCalendar(year, month) {
-            const firstDay = new Date(year, month, 1);
-            const lastDay = new Date(year, month + 1, 0);
+        // === TODAY PAGE ===
+        function loadTodayPage(container) {
+            const randomPrompt = journalPrompts[Math.floor(Math.random() * journalPrompts.length)];
+            const tasksHTML = appState.tasks.length > 0 
+                ? appState.tasks.map((task, i) => `
+                    <li class="task-item ${task.completed ? 'completed' : ''}">
+                        <input type="checkbox" ${task.completed ? 'checked' : ''} onchange="toggleTask(${i})">
+                        <span class="task-text">${task.text}</span>
+                        <button class="delete-task" onclick="deleteTask(${i})">🗑️</button>
+                    </li>
+                `).join('')
+                : '<li style="text-align: center; color: var(--text-secondary); padding: 1rem;">Aucune tâche</li>';
+
+            container.innerHTML = `
+                <div class="page-header fade-in">
+                    <h1>Aujourd'hui</h1>
+                    <p class="date">${new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</p>
+                </div>
+                
+                <div class="today-grid">
+                    <!-- JOURNAL RAPIDE -->
+                    <div class="card">
+                        <h3>✍️ Journal rapide</h3>
+                        <p class="journal-prompt">${randomPrompt}</p>
+                        <textarea id="quickJournal" placeholder="Écrivez vos pensées..."></textarea>
+                        <div class="word-count">0 mots</div>
+                        <button class="btn-primary" onclick="saveJournal()">Sauvegarder</button>
+                    </div>
+                    
+                    <!-- TÂCHES -->
+                    <div class="card">
+                        <h3>📋 Tâches du jour</h3>
+                        <ul class="task-list">${tasksHTML}</ul>
+                        <div class="add-task-container">
+                            <input type="text" id="newTask" placeholder="Nouvelle tâche..." onkeypress="if(event.key==='Enter') addTask()">
+                            <button class="btn-secondary" onclick="addTask()">+ Ajouter</button>
+                        </div>
+                    </div>
+                    
+                    <!-- HUMEUR -->
+                    <div class="card">
+                        <h3>😊 Comment vous sentez-vous ?</h3>
+                        <div class="mood-selector">
+                            <span class="mood-icon ${appState.mood === 'ecstatic' ? 'selected' : ''}" onclick="selectMood('ecstatic')">🤩</span>
+                            <span class="mood-icon ${appState.mood === 'happy' ? 'selected' : ''}" onclick="selectMood('happy')">😊</span>
+                            <span class="mood-icon ${appState.mood === 'good' ? 'selected' : ''}" onclick="selectMood('good')">🙂</span>
+                            <span class="mood-icon ${appState.mood === 'neutral' ? 'selected' : ''}" onclick="selectMood('neutral')">😐</span>
+                            <span class="mood-icon ${appState.mood === 'sad' ? 'selected' : ''}" onclick="selectMood('sad')">😔</span>
+                            <span class="mood-icon ${appState.mood === 'angry' ? 'selected' : ''}" onclick="selectMood('angry')">😡</span>
+                            <span class="mood-icon ${appState.mood === 'tired' ? 'selected' : ''}" onclick="selectMood('tired')">😴</span>
+                        </div>
+                    </div>
+                    
+                    <!-- EAU -->
+                    <div class="card">
+                        <h3>💧 Hydratation</h3>
+                        <div class="water-tracker">
+                            <button onclick="decrementWater()">-</button>
+                            <span class="water-count">${appState.waterCount}/8</span>
+                            <button onclick="incrementWater()">+</button>
+                        </div>
+                        <div class="water-glasses">
+                            ${Array.from({length: 8}, (_, i) => `<div class="water-glass ${i < appState.waterCount ? 'filled' : ''}"></div>`).join('')}
+                        </div>
+                    </div>
+                    
+                    <!-- HABITUDES -->
+                    <div class="card">
+                        <h3>🎯 Habitudes</h3>
+                        <div class="habit-item">
+                            <label>
+                                <input type="checkbox" ${appState.habits.exercise ? 'checked' : ''} onchange="toggleHabit('exercise')">
+                                💪 Exercice
+                            </label>
+                        </div>
+                        <div class="habit-item">
+                            <label>
+                                <input type="checkbox" ${appState.habits.meditation ? 'checked' : ''} onchange="toggleHabit('meditation')">
+                                🧘 Méditation
+                            </label>
+                        </div>
+                        <div class="habit-item">
+                            <label>
+                                <input type="checkbox" ${appState.habits.reading ? 'checked' : ''} onchange="toggleHabit('reading')">
+                                📚 Lecture
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- CITATION -->
+                    <div class="card">
+                        <h3>💫 Citation du jour</h3>
+                        <div class="quote-text">"${currentQuote}"</div>
+                        <button class="quote-refresh" onclick="getNewQuote()">🔄 Nouvelle citation</button>
+                    </div>
+                    
+                    <!-- STATISTIQUES -->
+                    <div class="card">
+                        <h3>📈 Statistiques</h3>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <div class="stat-number">${appState.journalStreak}</div>
+                                <div class="stat-label">Jours d'affilée</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">${appState.tasks.filter(t => t.completed).length}</div>
+                                <div class="stat-label">Tâches complétées</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- OBJECTIF -->
+                    <div class="card">
+                        <h3>🎯 Objectif principal</h3>
+                        <input type="text" id="mainGoal" placeholder="Quel est votre objectif principal aujourd'hui ?" style="margin-bottom: 0;">
+                    </div>
+                </div>
+            `;
+            
+            // Word counter
+            const journal = document.getElementById('quickJournal');
+            if (journal) {
+                journal.addEventListener('input', () => {
+                    const words = journal.value.trim() ? journal.value.trim().split(/\s+/).length : 0;
+                    document.querySelector('.word-count').textContent = words + ' mot' + (words > 1 ? 's' : '');
+                });
+            }
+        }
+
+        // === TASKS ===
+        function addTask() {
+            const input = document.getElementById('newTask');
+            if (input.value.trim()) {
+                appState.tasks.push({ text: input.value.trim(), completed: false });
+                saveData();
+                loadPage('today');
+            }
+        }
+
+        function toggleTask(i) {
+            appState.tasks[i].completed = !appState.tasks[i].completed;
+            saveData();
+            loadPage('today');
+        }
+
+        function deleteTask(i) {
+            appState.tasks.splice(i, 1);
+            saveData();
+            loadPage('today');
+        }
+
+        // === MOOD ===
+        function selectMood(mood) {
+            appState.mood = mood;
+            saveData();
+            document.querySelectorAll('.mood-icon').forEach(icon => icon.classList.remove('selected'));
+            event.target.classList.add('selected');
+        }
+
+        // === WATER ===
+        function incrementWater() {
+            if (appState.waterCount < 8) {
+                appState.waterCount++;
+                saveData();
+                loadPage('today');
+            }
+        }
+
+        function decrementWater() {
+            if (appState.waterCount > 0) {
+                appState.waterCount--;
+                saveData();
+                loadPage('today');
+            }
+        }
+
+        // === HABITS ===
+        function toggleHabit(habit) {
+            appState.habits[habit] = !appState.habits[habit];
+            saveData();
+        }
+
+        // === JOURNAL ===
+        function saveJournal() {
+            const text = document.getElementById('quickJournal').value;
+            if (text.trim()) {
+                appState.journalStreak++;
+                saveData();
+                alert('✅ Journal sauvegardé !');
+            }
+        }
+
+        // === CALENDAR PAGE ===
+        function loadCalendarPage(container) {
+            const month = new Date(appState.currentYear, appState.currentMonth).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+            
+            container.innerHTML = `
+                <div class="page-header">
+                    <h1>Calendrier</h1>
+                    <p class="date">${month}</p>
+                </div>
+                
+                <div class="calendar-container">
+                    <div class="calendar-header">
+                        <button class="calendar-nav" onclick="previousMonth()">‹</button>
+                        <h2 id="currentMonth">${month}</h2>
+                        <button class="calendar-nav" onclick="nextMonth()">›</button>
+                    </div>
+                    
+                    <div class="calendar-grid">
+                        <div class="calendar-day-name">Lun</div>
+                        <div class="calendar-day-name">Mar</div>
+                        <div class="calendar-day-name">Mer</div>
+                        <div class="calendar-day-name">Jeu</div>
+                        <div class="calendar-day-name">Ven</div>
+                        <div class="calendar-day-name">Sam</div>
+                        <div class="calendar-day-name">Dim</div>
+                        <div id="calendarDays" style="grid-column: 1 / -1; display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.5rem;"></div>
+                    </div>
+                </div>
+            `;
+            
+            renderCalendar();
+        }
+
+        function renderCalendar() {
+            const firstDay = new Date(appState.currentYear, appState.currentMonth, 1);
+            const lastDay = new Date(appState.currentYear, appState.currentMonth + 1, 0);
             const daysInMonth = lastDay.getDate();
             const startingDayOfWeek = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1;
             
@@ -563,61 +968,55 @@
             
             calendarDays.innerHTML = '';
             
-            // Empty cells before first day
             for (let i = 0; i < startingDayOfWeek; i++) {
-                const emptyDay = document.createElement('div');
-                emptyDay.className = 'calendar-day empty';
-                calendarDays.appendChild(emptyDay);
+                calendarDays.innerHTML += '<div class="calendar-day empty"></div>';
             }
             
-            // Days of month
             const today = new Date();
             for (let day = 1; day <= daysInMonth; day++) {
-                const dayElement = document.createElement('div');
-                dayElement.className = 'calendar-day';
-                dayElement.textContent = day;
-                
-                // Highlight today
-                if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
-                    dayElement.classList.add('today');
-                }
-                
-                calendarDays.appendChild(dayElement);
+                const isToday = day === today.getDate() && appState.currentMonth === today.getMonth() && appState.currentYear === today.getFullYear();
+                calendarDays.innerHTML += `<div class="calendar-day ${isToday ? 'today' : ''}">${day}</div>`;
             }
         }
 
         function previousMonth() {
-            currentMonth--;
-            if (currentMonth < 0) {
-                currentMonth = 11;
-                currentYear--;
+            appState.currentMonth--;
+            if (appState.currentMonth < 0) {
+                appState.currentMonth = 11;
+                appState.currentYear--;
             }
-            updateCalendar();
+            const month = new Date(appState.currentYear, appState.currentMonth).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+            document.getElementById('currentMonth').textContent = month;
+            renderCalendar();
         }
 
         function nextMonth() {
-            currentMonth++;
-            if (currentMonth > 11) {
-                currentMonth = 0;
-                currentYear++;
+            appState.currentMonth++;
+            if (appState.currentMonth > 11) {
+                appState.currentMonth = 0;
+                appState.currentYear++;
             }
-            updateCalendar();
+            const month = new Date(appState.currentYear, appState.currentMonth).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+            document.getElementById('currentMonth').textContent = month;
+            renderCalendar();
         }
 
-        function updateCalendar() {
-            const monthName = new Date(currentYear, currentMonth).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
-            document.getElementById('currentMonth').textContent = monthName;
-            renderCalendar(currentYear, currentMonth);
+        // === JOURNAL PAGE ===
+        function loadJournalPage(container) {
+            container.innerHTML = `
+                <div class="page-header">
+                    <h1>Journal</h1>
+                </div>
+                <div class="card" style="max-width: 800px; margin: 0 auto;">
+                    <h3>Nouvelle entrée</h3>
+                    <input type="text" placeholder="Titre...">
+                    <textarea style="min-height: 300px;" placeholder="Écrivez vos pensées..."></textarea>
+                    <button class="btn-primary">Sauvegarder</button>
+                </div>
+            `;
         }
 
-        // Mood selector
-        function selectMood(element, mood) {
-            document.querySelectorAll('.mood-icon').forEach(icon => icon.classList.remove('selected'));
-            element.classList.add('selected');
-            currentMood = mood;
-        }
-
-        // Theme toggle
+        // === THEME ===
         function toggleTheme() {
             const body = document.body;
             const button = document.getElementById('themeToggle');
@@ -633,7 +1032,8 @@
             }
         }
 
-        // Init
+        // === INIT ===
+        loadSavedData();
         loadPage('today');
     </script>
 </body>
