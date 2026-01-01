@@ -4,14 +4,37 @@
 const appState = {
     currentPage: 'today',
     currentTheme: 'dark',
-    user: null
+    user: null,
+    tasks: [],
+    mood: null,
+    journalEntry: '',
+    habits: {
+        water: 0,
+        exercise: false,
+        meditation: false
+    }
 };
+
+// Prompts quotidiens pour le journal
+const dailyPrompts = [
+    "Qu'est-ce qui vous rend reconnaissant(e) aujourd'hui ?",
+    "Quel est votre objectif principal pour aujourd'hui ?",
+    "Comment vous sentez-vous en ce moment ?",
+    "Quelle est la meilleure chose qui vous est arrivée récemment ?",
+    "Qu'avez-vous appris aujourd'hui ?",
+    "Qu'est-ce qui vous inspire en ce moment ?",
+    "Quel petit plaisir vous êtes-vous accordé aujourd'hui ?",
+    "Qu'aimeriez-vous accomplir cette semaine ?"
+];
 
 // === INITIALISATION ===
 document.addEventListener('DOMContentLoaded', () => {
     console.log('🌟 Ethera initialisée');
     
-    // Charger le thème sauvegardé
+    // Charger les données sauvegardées
+    loadSavedData();
+    
+    // Charger le thème
     loadTheme();
     
     // Initialiser la navigation
@@ -21,19 +44,29 @@ document.addEventListener('DOMContentLoaded', () => {
     loadPage('today');
 });
 
+// === CHARGEMENT DES DONNÉES ===
+function loadSavedData() {
+    const savedTasks = localStorage.getItem('ethera-tasks');
+    const savedMood = localStorage.getItem('ethera-mood-today');
+    
+    if (savedTasks) {
+        appState.tasks = JSON.parse(savedTasks);
+    }
+    
+    if (savedMood) {
+        appState.mood = savedMood;
+    }
+}
+
 // === NAVIGATION ===
 function initNavigation() {
     const navItems = document.querySelectorAll('.nav-item');
     
     navItems.forEach(item => {
         item.addEventListener('click', () => {
-            // Retirer la classe active de tous les items
             navItems.forEach(nav => nav.classList.remove('active'));
-            
-            // Ajouter la classe active à l'item cliqué
             item.classList.add('active');
             
-            // Charger la page correspondante
             const page = item.getAttribute('data-page');
             loadPage(page);
         });
@@ -45,20 +78,20 @@ function loadPage(pageName) {
     appState.currentPage = pageName;
     const container = document.getElementById('content-container');
     
-    // Animation de sortie
     container.style.opacity = '0';
     
     setTimeout(() => {
-        // Charger le contenu selon la page
         switch(pageName) {
             case 'today':
                 container.innerHTML = getTodayContent();
+                initTodayInteractions();
                 break;
             case 'calendar':
                 container.innerHTML = getCalendarContent();
                 break;
             case 'journal':
                 container.innerHTML = getJournalContent();
+                initJournalInteractions();
                 break;
             case 'projects':
                 container.innerHTML = getProjectsContent();
@@ -70,13 +103,11 @@ function loadPage(pageName) {
                 container.innerHTML = '<h2>Page non trouvée</h2>';
         }
         
-        // Animation d'entrée
         container.style.opacity = '1';
     }, 300);
 }
 
-// === CONTENU DES PAGES (TEMPORAIRE - MVP) ===
-
+// === CONTENU PAGE AUJOURD'HUI ===
 function getTodayContent() {
     const today = new Date();
     const dateStr = today.toLocaleDateString('fr-FR', { 
@@ -86,6 +117,18 @@ function getTodayContent() {
         day: 'numeric' 
     });
     
+    const randomPrompt = dailyPrompts[Math.floor(Math.random() * dailyPrompts.length)];
+    
+    const tasksHTML = appState.tasks.length > 0 
+        ? appState.tasks.map((task, index) => `
+            <li class="task-item ${task.completed ? 'completed' : ''}">
+                <input type="checkbox" ${task.completed ? 'checked' : ''} onchange="toggleTask(${index})">
+                <span class="task-text">${task.text}</span>
+                <button class="delete-task" onclick="deleteTask(${index})">🗑️</button>
+            </li>
+        `).join('')
+        : '<li class="no-tasks">Aucune tâche pour aujourd\'hui</li>';
+    
     return `
         <div class="page-header fade-in">
             <h1>Aujourd'hui</h1>
@@ -93,86 +136,53 @@ function getTodayContent() {
         </div>
         
         <div class="today-grid scale-in">
+            <!-- JOURNAL RAPIDE -->
             <div class="quick-journal card">
                 <h3>✍️ Journal rapide</h3>
-                <textarea placeholder="Comment vous sentez-vous aujourd'hui ?"></textarea>
-                <button class="btn-primary">Sauvegarder</button>
+                <p class="journal-prompt">${randomPrompt}</p>
+                <textarea id="quickJournal" placeholder="Écrivez vos pensées..."></textarea>
+                <div class="word-count">0 mots</div>
+                <button class="btn-primary" onclick="saveQuickJournal()">Sauvegarder</button>
             </div>
             
+            <!-- TÂCHES DU JOUR -->
             <div class="tasks-today card">
                 <h3>📋 Tâches du jour</h3>
-                <ul>
-                    <li>Aucune tâche pour aujourd'hui</li>
+                <ul class="task-list">
+                    ${tasksHTML}
                 </ul>
-                <button class="btn-secondary">+ Ajouter une tâche</button>
-            </div>
-            
-            <div class="mood-tracker card">
-                <h3>😊 Humeur</h3>
-                <div class="mood-selector">
-                    <span class="mood-icon">😊</span>
-                    <span class="mood-icon">😐</span>
-                    <span class="mood-icon">😢</span>
+                <div class="add-task-container">
+                    <input type="text" id="newTask" placeholder="Nouvelle tâche..." onkeypress="handleTaskEnter(event)">
+                    <button class="btn-secondary" onclick="addTask()">+ Ajouter</button>
                 </div>
             </div>
-        </div>
-    `;
-}
-
-function getCalendarContent() {
-    return `
-        <div class="page-header fade-in">
-            <h1>Calendrier</h1>
-        </div>
-        <div class="calendar-view scale-in">
-            <p>📆 Vue calendrier à venir...</p>
-        </div>
-    `;
-}
-
-function getJournalContent() {
-    return `
-        <div class="page-header fade-in">
-            <h1>Journal</h1>
-        </div>
-        <div class="journal-view scale-in">
-            <div class="journal-editor card">
-                <h3>Nouvelle entrée</h3>
-                <input type="text" placeholder="Titre..." class="journal-title">
-                <textarea placeholder="Écrivez vos pensées..." class="journal-content"></textarea>
-                <button class="btn-primary">Sauvegarder l'entrée</button>
+            
+            <!-- HUMEUR -->
+            <div class="mood-tracker card">
+                <h3>😊 Comment vous sentez-vous ?</h3>
+                <div class="mood-selector">
+                    <span class="mood-icon ${appState.mood === 'ecstatic' ? 'selected' : ''}" onclick="selectMood('ecstatic')">🤩</span>
+                    <span class="mood-icon ${appState.mood === 'happy' ? 'selected' : ''}" onclick="selectMood('happy')">😊</span>
+                    <span class="mood-icon ${appState.mood === 'good' ? 'selected' : ''}" onclick="selectMood('good')">🙂</span>
+                    <span class="mood-icon ${appState.mood === 'neutral' ? 'selected' : ''}" onclick="selectMood('neutral')">😐</span>
+                    <span class="mood-icon ${appState.mood === 'sad' ? 'selected' : ''}" onclick="selectMood('sad')">😔</span>
+                    <span class="mood-icon ${appState.mood === 'angry' ? 'selected' : ''}" onclick="selectMood('angry')">😡</span>
+                    <span class="mood-icon ${appState.mood === 'tired' ? 'selected' : ''}" onclick="selectMood('tired')">😴</span>
+                </div>
             </div>
-        </div>
-    `;
-}
-
-function getProjectsContent() {
-    return `
-        <div class="page-header fade-in">
-            <h1>Projets</h1>
-        </div>
-        <div class="projects-view scale-in">
-            <p>📊 Gestion de projets à venir...</p>
-        </div>
-    `;
-}
-
-function getInsightsContent() {
-    return `
-        <div class="page-header fade-in">
-            <h1>Insights</h1>
-        </div>
-        <div class="insights-view scale-in">
-            <p>📈 Statistiques et insights à venir...</p>
-        </div>
-    `;
-}
-
-// === UTILITAIRES ===
-function loadTheme() {
-    const savedTheme = localStorage.getItem('ethera-theme') || 'dark';
-    document.body.className = `theme-${savedTheme}`;
-    appState.currentTheme = savedTheme;
-}
-
-console.log('✨ Ethera App chargée avec succès');
+            
+            <!-- HABITUDES -->
+            <div class="habits-tracker card">
+                <h3>🎯 Habitudes quotidiennes</h3>
+                <div class="habit-item">
+                    <span>💧 Eau (8 verres)</span>
+                    <div class="water-tracker">
+                        <button onclick="decrementWater()">-</button>
+                        <span id="waterCount">${appState.habits.water}</span>
+                        <button onclick="incrementWater()">+</button>
+                    </div>
+                </div>
+                <div class="habit-item">
+                    <label>
+                        <input type="checkbox" ${appState.habits.exercise ? 'checked' : ''} onchange="toggleHabit('exercise')">
+                        💪 Exercice
