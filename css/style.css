@@ -1,3 +1,36 @@
+/* ========================================
+   ETHERA - CSS COMPLET (Themes + Base + Animations)
+   ======================================== */
+
+/* === THEMES === */
+.theme-dark {
+    --bg-primary: #0a0a0f;
+    --bg-secondary: #13131a;
+    --text-primary: #e8e8f0;
+    --text-secondary: #a8a8b8;
+    --border-color: #2a2a35;
+    --accent-primary: #c792ea;
+    --accent-secondary: #82aaff;
+    --hover-bg: rgba(199, 146, 234, 0.1);
+    --active-bg: rgba(199, 146, 234, 0.15);
+    --shadow-color: rgba(199, 146, 234, 0.2);
+    --button-bg: #1e1e28;
+}
+
+.theme-light {
+    --bg-primary: #fafafa;
+    --bg-secondary: #ffffff;
+    --text-primary: #1a1a1a;
+    --text-secondary: #6b6b6b;
+    --border-color: #e0e0e0;
+    --accent-primary: #7c3aed;
+    --accent-secondary: #3b82f6;
+    --hover-bg: rgba(124, 58, 237, 0.08);
+    --active-bg: rgba(124, 58, 237, 0.12);
+    --shadow-color: rgba(124, 58, 237, 0.15);
+    --button-bg: #f5f3ff;
+}
+
 /* === RESET & BASE === */
 * {
     margin: 0;
@@ -10,17 +43,18 @@ body {
     display: flex;
     height: 100vh;
     overflow: hidden;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* === SIDEBAR NAVIGATION === */
+/* === SIDEBAR === */
 .sidebar {
     width: 280px;
     padding: 2rem 1.5rem;
     display: flex;
     flex-direction: column;
     border-right: 1px solid var(--border-color);
-    transition: all 0.3s ease;
     background: var(--bg-primary);
 }
 
@@ -32,7 +66,6 @@ body {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    letter-spacing: -1px;
 }
 
 .nav-menu {
@@ -48,9 +81,8 @@ body {
     margin-bottom: 0.5rem;
     border-radius: 12px;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s ease;
     font-weight: 500;
-    font-size: 0.95rem;
 }
 
 .nav-item:hover {
@@ -75,16 +107,14 @@ body {
 
 #themeToggle {
     width: 100%;
-    padding: 1rem 1.5rem;
+    padding: 1rem;
     border: none;
     border-radius: 12px;
     background: var(--button-bg);
     color: var(--text-primary);
-    font-size: 0.95rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 #themeToggle:hover {
@@ -103,7 +133,7 @@ body {
 #content-container {
     max-width: 1200px;
     margin: 0 auto;
-    animation: fadeIn 0.5s ease;
+    opacity: 1;
     transition: opacity 0.3s ease;
 }
 
@@ -115,22 +145,19 @@ body {
 .page-header h1 {
     font-size: 2.5rem;
     font-weight: 700;
-    margin-bottom: 0.5rem;
     color: var(--text-primary);
 }
 
 .page-header .date {
     font-size: 1rem;
     color: var(--text-secondary);
-    text-transform: capitalize;
 }
 
-/* === GRID LAYOUTS === */
+/* === GRIDS === */
 .today-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 1.5rem;
-    margin-top: 2rem;
 }
 
 /* === CARDS === */
@@ -140,7 +167,6 @@ body {
     border-radius: 16px;
     padding: 2rem;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
 .card:hover {
@@ -152,10 +178,9 @@ body {
     font-size: 1.25rem;
     margin-bottom: 1.5rem;
     color: var(--text-primary);
-    font-weight: 600;
 }
 
-/* === FORM ELEMENTS === */
+/* === FORMS === */
 input[type="text"],
 textarea {
     width: 100%;
@@ -164,45 +189,35 @@ textarea {
     border-radius: 10px;
     background: var(--bg-secondary);
     color: var(--text-primary);
-    font-size: 0.95rem;
     font-family: inherit;
     transition: all 0.3s ease;
-    resize: vertical;
 }
 
 textarea {
     min-height: 120px;
-    margin-bottom: 1rem;
+    resize: vertical;
 }
 
-input[type="text"]:focus,
-textarea:focus {
+input:focus, textarea:focus {
     outline: none;
     border-color: var(--accent-primary);
     box-shadow: 0 0 0 3px var(--hover-bg);
 }
 
 /* === BUTTONS === */
-button {
-    font-family: inherit;
-}
-
-.btn-primary,
-.btn-secondary {
+.btn-primary, .btn-secondary {
+    width: 100%;
     padding: 0.875rem 1.75rem;
     border: none;
     border-radius: 10px;
-    font-size: 0.95rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    width: 100%;
 }
 
 .btn-primary {
     background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
     color: white;
-    box-shadow: 0 4px 12px var(--shadow-color);
 }
 
 .btn-primary:hover {
@@ -216,36 +231,10 @@ button {
     border: 1px solid var(--border-color);
 }
 
-.btn-secondary:hover {
-    background: var(--hover-bg);
-    border-color: var(--accent-primary);
-}
-
-/* === JOURNAL PROMPT === */
-.journal-prompt {
-    background: var(--hover-bg);
-    padding: 1rem;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-    font-style: italic;
-    color: var(--text-secondary);
-    border-left: 3px solid var(--accent-primary);
-}
-
-.word-count {
-    text-align: right;
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
-}
-
-/* === TASK LIST === */
+/* === TASKS === */
 .task-list {
     list-style: none;
     margin-bottom: 1.5rem;
-    max-height: 300px;
-    overflow-y: auto;
 }
 
 .task-item {
@@ -256,20 +245,6 @@ button {
     background: var(--bg-secondary);
     border-radius: 8px;
     margin-bottom: 0.5rem;
-    transition: all 0.3s ease;
-}
-
-.task-item:hover {
-    background: var(--hover-bg);
-}
-
-.task-item.completed {
-    opacity: 0.6;
-}
-
-.task-item.completed .task-text {
-    text-decoration: line-through;
-    color: var(--text-secondary);
 }
 
 .task-item input[type="checkbox"] {
@@ -281,30 +256,19 @@ button {
 
 .task-text {
     flex: 1;
-    color: var(--text-primary);
 }
 
 .delete-task {
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 1.2rem;
     opacity: 0.5;
-    transition: all 0.3s ease;
-    padding: 0.25rem;
     width: auto;
+    padding: 0;
 }
 
 .delete-task:hover {
     opacity: 1;
-    transform: scale(1.2);
-}
-
-.no-tasks {
-    padding: 1rem;
-    color: var(--text-secondary);
-    font-style: italic;
-    text-align: center;
 }
 
 .add-task-container {
@@ -312,16 +276,12 @@ button {
     gap: 0.75rem;
 }
 
-.add-task-container input {
-    flex: 1;
-}
-
 .add-task-container button {
     width: auto;
     padding: 0.875rem 1.5rem;
 }
 
-/* === MOOD SELECTOR === */
+/* === MOOD === */
 .mood-selector {
     display: flex;
     gap: 1rem;
@@ -333,68 +293,34 @@ button {
 .mood-icon {
     font-size: 2.5rem;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     opacity: 0.4;
-    filter: grayscale(100%);
+    transition: all 0.3s ease;
 }
 
 .mood-icon:hover {
     transform: scale(1.3);
     opacity: 0.8;
-    filter: grayscale(0%);
 }
 
 .mood-icon.selected {
     opacity: 1;
-    filter: grayscale(0%);
     transform: scale(1.4);
-    animation: moodPulse 2s ease-in-out infinite;
 }
 
-@keyframes moodPulse {
-    0%, 100% {
-        transform: scale(1.4);
-    }
-    50% {
-        transform: scale(1.5);
-    }
-}
-
-/* === HABITS TRACKER === */
+/* === HABITS === */
 .habit-item {
     display: flex;
-    align-items: center;
     justify-content: space-between;
     padding: 1rem;
     background: var(--bg-secondary);
     border-radius: 8px;
     margin-bottom: 0.75rem;
-    transition: all 0.3s ease;
-}
-
-.habit-item:hover {
-    background: var(--hover-bg);
-}
-
-.habit-item label {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    cursor: pointer;
-    font-size: 1rem;
-}
-
-.habit-item input[type="checkbox"] {
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-    accent-color: var(--accent-primary);
 }
 
 .water-tracker {
     display: flex;
-    align-items: center;
     gap: 1rem;
+    align-items: center;
 }
 
 .water-tracker button {
@@ -404,96 +330,26 @@ button {
     border: none;
     background: var(--accent-primary);
     color: white;
-    font-size: 1.25rem;
     cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
-.water-tracker button:hover {
-    transform: scale(1.1);
-    box-shadow: 0 4px 12px var(--shadow-color);
+/* === ANIMATIONS === */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-.water-tracker span {
-    font-size: 1.25rem;
-    font-weight: 600;
-    min-width: 30px;
-    text-align: center;
-    color: var(--accent-primary);
+.fade-in {
+    animation: fadeIn 0.5s ease;
 }
 
-/* === DAILY GOALS === */
-.goal-input {
-    margin-bottom: 1rem;
-}
-
-/* === QUOTE CARD === */
-.quote-card blockquote {
-    font-size: 1.1rem;
-    font-style: italic;
-    line-height: 1.6;
-    color: var(--text-primary);
-    padding: 1.5rem;
-    background: var(--bg-secondary);
-    border-radius: 8px;
-    border-left: 4px solid var(--accent-primary);
-    margin-bottom: 1rem;
-}
-
-/* === JOURNAL === */
-.journal-editor {
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-.journal-title {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-    padding: 0.75rem 1rem;
-}
-
-.journal-content {
-    min-height: 300px;
-    line-height: 1.8;
+.scale-in {
+    animation: fadeIn 0.4s ease;
 }
 
 /* === RESPONSIVE === */
-@media (max-width: 1200px) {
-    .today-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
 @media (max-width: 768px) {
-    .sidebar {
-        width: 80px;
-    }
-    
-    .sidebar .logo h1 {
-        font-size: 1.5rem;
-    }
-    
-    .nav-item span:not(.icon) {
-        display: none;
-    }
-    
-    .main-content {
-        padding: 1.5rem;
-    }
-    
-    .today-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .mood-selector {
-        gap: 0.75rem;
-    }
-    
-    .mood-icon {
-        font-size: 2rem;
-    }
+    .sidebar { width: 80px; }
+    .nav-item span:not(.icon) { display: none; }
+    .today-grid { grid-template-columns: 1fr; }
 }
