@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ethera - Votre agenda mindful</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/themes.css">
+    <link rel="stylesheet" href="css/animations.css">
+</head>
+<body class="theme-dark">
+    
+    <!-- Navigation principale -->
+    <nav class="sidebar">
+        <div class="logo">
+            <h1>Ethera</h1>
+        </div>
+        
+        <ul class="nav-menu">
+            <li class="nav-item active" data-page="today">
+                <span class="icon">📅</span>
+                <span>Aujourd'hui</span>
+            </li>
+            <li class="nav-item" data-page="calendar">
+                <span class="icon">📆</span>
+                <span>Calendrier</span>
+            </li>
+            <li class="nav-item" data-page="journal">
+                <span class="icon">✍️</span>
+                <span>Journal</span>
+            </li>
+            <li class="nav-item" data-page="projects">
+                <span class="icon">📊</span>
+                <span>Projets</span>
+            </li>
+            <li class="nav-item" data-page="insights">
+                <span class="icon">📈</span>
+                <span>Insights</span>
+            </li>
+        </ul>
+        
+        <div class="theme-toggle">
+            <button id="themeToggle">🌙 Theme</button>
+        </div>
+    </nav>
+
+    <!-- Contenu principal -->
+    <main class="main-content">
+        <div id="content-container">
+            <!-- Le contenu des pages sera chargé ici dynamiquement -->
+        </div>
+    </main>
+
+    <script src="js/app.js"></script>
+    <script src="js/themes.js"></script>
+</body>
+</html>
