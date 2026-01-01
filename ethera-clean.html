@@ -147,6 +147,7 @@
         .page-header .date {
             color: var(--text-secondary);
             margin-bottom: 2rem;
+            text-transform: capitalize;
         }
 
         /* === GRID === */
@@ -300,6 +301,89 @@
             color: var(--text-secondary);
             margin-bottom: 0.5rem;
         }
+
+        /* === CALENDAR === */
+        .calendar-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding: 0 1rem;
+        }
+
+        .calendar-header h2 {
+            font-size: 1.5rem;
+            text-transform: capitalize;
+        }
+
+        .calendar-nav {
+            background: var(--button-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            width: 40px;
+            height: 40px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .calendar-nav:hover {
+            background: var(--hover-bg);
+            transform: scale(1.1);
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5rem;
+            background: var(--bg-primary);
+            padding: 2rem;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+        }
+
+        .calendar-day-name {
+            text-align: center;
+            font-weight: 600;
+            padding: 1rem;
+            color: var(--accent-primary);
+            text-transform: uppercase;
+            font-size: 0.85rem;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .calendar-day:hover:not(.empty) {
+            background: var(--hover-bg);
+            transform: scale(1.05);
+        }
+
+        .calendar-day.today {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+            font-weight: 700;
+        }
+
+        .calendar-day.empty {
+            background: transparent;
+            cursor: default;
+        }
     </style>
 </head>
 <body class="theme-dark">
@@ -314,13 +398,21 @@
                 <span class="icon">📅</span>
                 <span>Aujourd'hui</span>
             </li>
+            <li class="nav-item" onclick="loadPage('calendar')">
+                <span class="icon">📆</span>
+                <span>Calendrier</span>
+            </li>
             <li class="nav-item" onclick="loadPage('journal')">
                 <span class="icon">✍️</span>
                 <span>Journal</span>
             </li>
-            <li class="nav-item" onclick="loadPage('calendar')">
-                <span class="icon">📆</span>
-                <span>Calendrier</span>
+            <li class="nav-item" onclick="loadPage('projects')">
+                <span class="icon">📊</span>
+                <span>Projets</span>
+            </li>
+            <li class="nav-item" onclick="loadPage('insights')">
+                <span class="icon">📈</span>
+                <span>Insights</span>
             </li>
         </ul>
         
@@ -336,6 +428,8 @@
     <script>
         // App state
         let currentMood = null;
+        let currentYear = new Date().getFullYear();
+        let currentMonth = new Date().getMonth();
 
         // Load page
         function loadPage(page) {
@@ -394,6 +488,40 @@
                         document.querySelector('.word-count').textContent = words + ' mot' + (words > 1 ? 's' : '');
                     });
                 }
+                
+            } else if (page === 'calendar') {
+                const today = new Date();
+                const month = today.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+                
+                container.innerHTML = `
+                    <div class="page-header">
+                        <h1>Calendrier</h1>
+                        <p class="date">${month}</p>
+                    </div>
+                    
+                    <div class="calendar-container">
+                        <div class="calendar-header">
+                            <button class="calendar-nav" onclick="previousMonth()">‹</button>
+                            <h2 id="currentMonth">${month}</h2>
+                            <button class="calendar-nav" onclick="nextMonth()">›</button>
+                        </div>
+                        
+                        <div class="calendar-grid">
+                            <div class="calendar-day-name">Lun</div>
+                            <div class="calendar-day-name">Mar</div>
+                            <div class="calendar-day-name">Mer</div>
+                            <div class="calendar-day-name">Jeu</div>
+                            <div class="calendar-day-name">Ven</div>
+                            <div class="calendar-day-name">Sam</div>
+                            <div class="calendar-day-name">Dim</div>
+                            
+                            <div id="calendarDays" style="grid-column: 1 / -1; display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.5rem;"></div>
+                        </div>
+                    </div>
+                `;
+                
+                renderCalendar(today.getFullYear(), today.getMonth());
+                
             } else if (page === 'journal') {
                 container.innerHTML = `
                     <div class="page-header">
@@ -406,14 +534,80 @@
                         <button class="btn-primary">Sauvegarder</button>
                     </div>
                 `;
-            } else {
+            } else if (page === 'projects') {
                 container.innerHTML = `
                     <div class="page-header">
-                        <h1>Calendrier</h1>
+                        <h1>Projets</h1>
+                    </div>
+                    <p>À venir...</p>
+                `;
+            } else if (page === 'insights') {
+                container.innerHTML = `
+                    <div class="page-header">
+                        <h1>Insights</h1>
                     </div>
                     <p>À venir...</p>
                 `;
             }
+        }
+
+        // Calendar functions
+        function renderCalendar(year, month) {
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const daysInMonth = lastDay.getDate();
+            const startingDayOfWeek = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1;
+            
+            const calendarDays = document.getElementById('calendarDays');
+            if (!calendarDays) return;
+            
+            calendarDays.innerHTML = '';
+            
+            // Empty cells before first day
+            for (let i = 0; i < startingDayOfWeek; i++) {
+                const emptyDay = document.createElement('div');
+                emptyDay.className = 'calendar-day empty';
+                calendarDays.appendChild(emptyDay);
+            }
+            
+            // Days of month
+            const today = new Date();
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                dayElement.textContent = day;
+                
+                // Highlight today
+                if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
+                    dayElement.classList.add('today');
+                }
+                
+                calendarDays.appendChild(dayElement);
+            }
+        }
+
+        function previousMonth() {
+            currentMonth--;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            updateCalendar();
+        }
+
+        function nextMonth() {
+            currentMonth++;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            updateCalendar();
+        }
+
+        function updateCalendar() {
+            const monthName = new Date(currentYear, currentMonth).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+            document.getElementById('currentMonth').textContent = monthName;
+            renderCalendar(currentYear, currentMonth);
         }
 
         // Mood selector
